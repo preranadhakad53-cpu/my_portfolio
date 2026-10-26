@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prerana Dhaked — Personal Profile</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+  <header class="hero">
+    <p class="eyebrow">Prerana Dhaked: AIML Student | Tech Explorer | CSE Student</p>
+    <h1>Prerana Dhaked</h1>
+    <p class="intro">I'm Prerana Dhaked, a Computer Science student specializing in 
+      Artificial Intelligence and Machine Learning, 
+      passionate about exploring technology and building meaningful solutions.
+      <br>
+      contact me at: preranadhaked2004@gmail.com
+      <br>
+      <br>
+      Linkedin : www.linkedin.com/in/prerana-dhakad-16307b362
+      <br>
+      github: https://github.com/preranadhaked53-cpu
+      <br>
+    </p>
+  </header>
+
+  <main>
+    <section id="about" aria-labelledby="about-heading">
+      <h2 id="about-heading">About</h2>
+      <p>
+        Short Bio:
+        I'm a second-year BTech CSE (AIML) student at JECRC University, Jaipur. 
+        I enjoy coding, exploring AI, experimenting with new technologies, and solving problems through creative thinking. 
+        Currently, I'm strengthening my skills in Python, C++, Data Structures and Algorithms, and web development 
+        while working on projects that combine software development and data analysis.
+      </p>
+      <p>
+        Goals:
+        I aim to become a skilled AI/ML developer who can turn complex ideas into practical, impactful applications. 
+        I enjoy experimenting with innovative ideas, building projects from scratch, and learning how different technologies work together. 
+        I'm particularly interested in artificial intelligence, robotics, cybersecurity, and developing tools that solve real-world problems.
+      </p>
+    </section>
+
+    <section id="skills" aria-labelledby="skills-heading">
+      <h2 id="skills-heading">Skills</h2>
+      <ul>
+        <li>skill 1 : Python Programming</li>
+        <li>skill 2 : C++ Programming</li>
+        <li>skill 3 : Artificial intelligence and Machine Learning</li>
+        <li>skill 4 : Data Analysis and Visualization</li>
+        <li>skill 5 : Web Development</li>
+      </ul>
+    </section>
+
+    <section id="projects" aria-labelledby="projects-heading">
+      <h2 id="projects-heading">Projects</h2>
+      <ul class="projects">
+        <li>
+          <a href="https://github.com/preranadhakad53-cpu/messy_python_code_improvement">Student Marks Processor</a>
+          <p>A Python script that takes a list of student marks, assigns letter grades (A, B, C, or F), prints pass/fail for each student, and reports class average, totals, and how many scores sit above the average.</p>
+        </li>
+        <li>
+          <a href="https://github.com/preranadhakad53-cpu/student_reading_list_app">Student Reading List App</a>
+          <p>A student reading-list app for keeping track of books to read, currently reading, and finished titles, so students can organize their reading in one place.</p>
+        </li>
+        <li>
+          <a href="https://github.com/preranadhakad53-cpu/python_program_collection">Python Program Collection</a>
+          <p>A set of beginner Python programs covering loops, factorial calculation, the Fibonacci series, and dictionaries, plus notes comparing Python dictionaries with C structures.</p>
+        </li>
+        <li>
+          <a href="https://github.com/preranadhakad53-cpu/fixing-a-buggy-python-script-using-AI">Fixing a Buggy Python Script Using AI</a>
+          <p>A debugging project that uses AI to repair a broken student-utilities script. The corrected code calculates average marks, checks pass/fail (pass mark 40), and assigns grades such as Distinction, First, Second, or Fail.</p>
+        </li>
+        <li>
+          <a href="https://github.com/preranadhakad53-cpu/quiz-application">Code With AI Quiz App</a>
+          <p>An interactive multiple-choice quiz built with HTML, CSS, and JavaScript. It asks questions on large language models, coding practices, unit testing, and algorithmic complexity, then tracks your score as you go.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+  <section id="aiChatSection" class="ai-chat">
+    <h2>Ask My AI Assistant</h2>
+  
+    <p>
+      Ask questions about this portfolio,
+      projects, and technologies.
+    </p>
+  
+    <div
+      id="chatMessages"
+      aria-live="polite"
+    ></div>
+  
+    <div class="chat-controls">
+      <input
+        type="text"
+        id="userInput"
+        placeholder="Ask a question..."
+      />
+  
+      <button id="sendButton" type="button">
+        Send
+      </button>
+    </div>
+  
+    <p id="chatStatus" role="status"></p>
+  
+    <p class="chat-note">
+      AI chat is available during the local
+      classroom demonstration only.
+    </p>
+  </section>
+  <footer>
+    <section id="weather">
+      <h2>Weather</h2>
+  
+      <input
+          type="text"
+          id="cityInput"
+          placeholder="Enter a city"
+      >
+  
+      <button id="weatherButton">
+          Get Weather
+      </button>
+  
+      <div id="weatherResult">
+          Enter a city to see the weather.
+      </div>
+  </section>
+    <p>Prerana Dhaked: Contact email or social profile</p>
+  </footer>
+  <button id="themeToggle">Switch to Dark Mode</button>
+  <script src="script.js"></script>
+  <script src="config.js"></script>
+<script src="Chatbot.js"></script>
+</body>
+</html>
