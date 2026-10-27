@@ -105,7 +105,7 @@ function getLocalPortfolioResponse(question) {
     q.includes("github") ||
     q.includes("social")
   ) {
-    return "You can get in touch with Prerana:\n• Email: preranadhaked2004@gmail.com\n• LinkedIn: linkedin.com/in/prerana-dhakad-16307b362\n• GitHub: github.com/preranadhaked53-cpu";
+    return "You can get in touch with Prerana:\n• Email: preranadhaked2004@gmail.com\n• LinkedIn: linkedin.com/in/prerana-dhakad-16307b362\n• GitHub: github.com/preranadhakad53-cpu";
   }
 
   if (q.includes("weather")) {
