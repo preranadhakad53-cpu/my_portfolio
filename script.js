@@ -1,17 +1,25 @@
 console.log("JavaScript connected");
 const themeButton = document.getElementById("themeToggle");
 
-themeButton.addEventListener("click", function () {
+// Restore saved theme preference on page load
+if (localStorage.getItem("portfolio_theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    if (themeButton) themeButton.textContent = "Switch to Light Mode";
+}
 
-    document.body.classList.toggle("dark-mode");
+if (themeButton) {
+    themeButton.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
 
-    if (document.body.classList.contains("dark-mode")) {
-        themeButton.textContent = "Switch to Light Mode";
-    } else {
-        themeButton.textContent = "Switch to Dark Mode";
-    }
-
-});
+        if (document.body.classList.contains("dark-mode")) {
+            themeButton.textContent = "Switch to Light Mode";
+            localStorage.setItem("portfolio_theme", "dark");
+        } else {
+            themeButton.textContent = "Switch to Dark Mode";
+            localStorage.setItem("portfolio_theme", "light");
+        }
+    });
+}
 const cityInput = document.getElementById("cityInput");
 const weatherButton = document.getElementById("weatherButton");
 const weatherResult = document.getElementById("weatherResult");

@@ -131,3 +131,126 @@ footer {
     padding-top: 3rem;
   }
 }
+
+/* ==========================================================================
+   Theme Toggle Button & Dark Mode Styles
+   ========================================================================== */
+
+#themeToggle {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid #d7d0c4;
+  background: #ffffff;
+  color: #1b241f;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+#themeToggle:hover {
+  background: #f0ede6;
+  transform: translateY(-1px);
+}
+
+/* Base Dark Mode */
+body.dark-mode {
+  background: #141a17;
+  color: #e4e7e5;
+}
+
+body.dark-mode .hero,
+body.dark-mode section {
+  border-bottom-color: #27332d;
+}
+
+body.dark-mode .eyebrow,
+body.dark-mode footer,
+body.dark-mode .chat-note {
+  color: #8fa096;
+}
+
+body.dark-mode .tagline,
+body.dark-mode .projects-list p {
+  color: #c0c8c3;
+}
+
+body.dark-mode .projects-list a {
+  color: #5eead4;
+}
+
+body.dark-mode .projects-list a:hover,
+body.dark-mode .projects-list a:focus-visible {
+  color: #99f6e4;
+}
+
+/* Theme toggle in dark mode */
+body.dark-mode #themeToggle {
+  background: #232d28;
+  color: #e4e7e5;
+  border-color: #3b4d44;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode #themeToggle:hover {
+  background: #2b3932;
+}
+
+/* Chatbot section dark mode */
+body.dark-mode .ai-chat {
+  background: #1c2420;
+  border-color: #2b3831;
+  color: #e4e7e5;
+}
+
+body.dark-mode #chatMessages {
+  background: #131916;
+  border: 1px solid #2b3831;
+}
+
+body.dark-mode .chat-user {
+  background: #1e3a5f;
+  color: #e0f2fe;
+}
+
+body.dark-mode .chat-assistant {
+  background: #27342d;
+  color: #e4e7e5;
+}
+
+body.dark-mode #userInput,
+body.dark-mode #cityInput {
+  background: #131916;
+  color: #e4e7e5;
+  border: 1px solid #2b3831;
+}
+
+body.dark-mode #userInput::placeholder,
+body.dark-mode #cityInput::placeholder {
+  color: #6d7f75;
+}
+
+body.dark-mode #weatherResult {
+  color: #c0c8c3;
+}
+
+#weatherButton {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #1f5c45;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+body.dark-mode #weatherButton {
+  background-color: #2a7a5d;
+}
