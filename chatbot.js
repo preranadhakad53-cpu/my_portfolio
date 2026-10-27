@@ -5,6 +5,19 @@ const chatStatus = document.getElementById("chatStatus");
 
 let chatTemperature = 0.7;
 
+// System prompt defining the assistant's persona & knowledge
+const SYSTEM_PROMPT =
+  "You are an AI assistant for Prerana Dhaked's portfolio website. " +
+  "Prerana is a second-year BTech CSE (AIML) student at JECRC University, Jaipur. " +
+  "Her projects include: " +
+  "1. Student Marks Processor (Python script for grades and statistics). " +
+  "2. Student Reading List App (reading organizer). " +
+  "3. Python Program Collection (beginner Python exercises and data structures). " +
+  "4. Fixing a Buggy Python Script Using AI (debugging student utilities). " +
+  "5. Code With AI Quiz App (interactive quiz on ML and coding). " +
+  "Her skills include Python, C++, Artificial Intelligence & Machine Learning, Data Analysis, and Web Development. " +
+  "Answer questions politely, accurately, and concisely (under 80 words).";
+
 // Helper to append a message bubble in chat window
 function showChatMessage(role, text) {
   if (!chatMessages) return;
@@ -19,7 +32,7 @@ function showChatMessage(role, text) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Retrieve API key from config.js or sessionStorage
+// Retrieve client-side API key if explicitly provided
 function getApiKey() {
   if (typeof CONFIG !== "undefined") {
     const key = CONFIG.apiKey || CONFIG.API_KEY;
@@ -51,7 +64,7 @@ function getModel() {
   return "llama-3.1-8b-instant";
 }
 
-// Smart local responses for portfolio queries when no external API key is configured
+// Smart local responses for portfolio queries
 function getLocalPortfolioResponse(question) {
   const q = question.toLowerCase().trim();
 
@@ -60,7 +73,7 @@ function getLocalPortfolioResponse(question) {
   }
 
   if (q.includes("name") || q.includes("who are you") || q.includes("who is prerana")) {
-    return "This portfolio belongs to Prerana Dhaked! She is a Computer Science and Engineering student specializing in Artificial Intelligence and Machine Learning.";
+    return "This portfolio belongs to Prerana Dhaked! She is a Computer Science and Engineering student specializing in Artificial Intelligence and Machine Learning at JECRC University.";
   }
 
   if (
@@ -119,6 +132,68 @@ function getLocalPortfolioResponse(question) {
   return null;
 }
 
+// Function to call AI via either Vercel Serverless Function or direct client API key
+async function fetchAIResponse(question, clientApiKey) {
+  const messages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user", content: question }
+  ];
+
+  // Path 1: If client API key exists (e.g. pasted in chat or config.js)
+  if (clientApiKey) {
+    const response = await fetch(`${getBaseUrl()}/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${clientApiKey}`
+      },
+      body: JSON.stringify({
+        model: getModel(),
+        temperature: chatTemperature,
+        messages: messages
+      })
+    });
+
+    if (response.status === 401) throw new Error("INVALID_KEY");
+    if (response.status === 429) throw new Error("RATE_LIMIT");
+    if (!response.ok) throw new Error("API_ERROR");
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content;
+  }
+
+  // Path 2: Call Vercel Serverless Function (/api/chat) which holds GROQ_API_KEY secretly
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: getModel(),
+      temperature: chatTemperature,
+      messages: messages
+    })
+  });
+
+  if (response.status === 404) {
+    // 404 means not running on Vercel (e.g. opened index.html directly from desktop)
+    throw new Error("SERVERLESS_NOT_FOUND");
+  }
+
+  if (response.status === 500) {
+    const data = await response.json().catch(() => ({}));
+    if (data.error && data.error.includes("GROQ_API_KEY")) {
+      throw new Error("ENV_KEY_MISSING");
+    }
+    throw new Error("API_ERROR");
+  }
+
+  if (!response.ok) {
+    throw new Error("API_ERROR");
+  }
+
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content;
+}
+
 async function sendChatMessage() {
   if (!chatInput || !chatButton) return;
 
@@ -137,26 +212,8 @@ async function sendChatMessage() {
     return;
   }
 
-  const apiKey = getApiKey();
+  const clientApiKey = getApiKey();
 
-  // If no Groq API key is configured, check if we have an instant built-in answer
-  if (!apiKey) {
-    showChatMessage("user", question);
-    chatInput.value = "";
-
-    const localAnswer = getLocalPortfolioResponse(question);
-    if (localAnswer) {
-      showChatMessage("assistant", localAnswer);
-    } else {
-      showChatMessage(
-        "assistant",
-        "I can tell you all about Prerana's skills, projects, education, or contact details! (To ask arbitrary questions powered by live AI, add your Groq API key in config.js or paste it here)."
-      );
-    }
-    return;
-  }
-
-  // If API key is provided, use live Groq LLM
   showChatMessage("user", question);
   chatInput.value = "";
 
@@ -164,54 +221,7 @@ async function sendChatMessage() {
   if (chatStatus) chatStatus.textContent = "AI is thinking...";
 
   try {
-    const response = await fetch(`${getBaseUrl()}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: getModel(),
-        temperature: chatTemperature,
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are an AI assistant for Prerana Dhaked's portfolio website. " +
-              "Prerana is a second-year BTech CSE (AIML) student at JECRC University, Jaipur. " +
-              "Her projects include: " +
-              "1. Student Marks Processor (Python script for grades and statistics). " +
-              "2. Student Reading List App (reading organizer). " +
-              "3. Python Program Collection (beginner Python exercises and data structures). " +
-              "4. Fixing a Buggy Python Script Using AI (debugging student utilities). " +
-              "5. Code With AI Quiz App (interactive quiz on ML and coding). " +
-              "Her skills include Python, C++, Artificial Intelligence & Machine Learning, Data Analysis, and Web Development. " +
-              "Answer questions politely, accurately, and concisely (under 80 words)."
-          },
-          {
-            role: "user",
-            content: question
-          }
-        ]
-      })
-    });
-
-    if (response.status === 401) {
-      throw new Error("INVALID_KEY");
-    }
-
-    if (response.status === 429) {
-      throw new Error("RATE_LIMIT");
-    }
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error("API response error:", response.status, errorData);
-      throw new Error("API_ERROR");
-    }
-
-    const data = await response.json();
-    const answer = data.choices?.[0]?.message?.content;
+    const answer = await fetchAIResponse(question, clientApiKey);
 
     if (typeof answer !== "string" || !answer.trim()) {
       throw new Error("INVALID_RESPONSE");
@@ -219,12 +229,18 @@ async function sendChatMessage() {
 
     showChatMessage("assistant", answer);
   } catch (error) {
-    console.error("Chat error:", error);
+    console.warn("AI service notice:", error.message);
 
-    // Fall back to local portfolio knowledge if network/API fails
+    // Fall back to smart built-in portfolio knowledge base
     const localAnswer = getLocalPortfolioResponse(question);
+
     if (localAnswer) {
       showChatMessage("assistant", localAnswer);
+    } else if (error.message === "ENV_KEY_MISSING" || error.message === "SERVERLESS_NOT_FOUND") {
+      showChatMessage(
+        "assistant",
+        "I can answer questions about Prerana's skills, projects, and contact info! To enable full live AI chat, add GROQ_API_KEY in your Vercel Project Settings."
+      );
     } else if (error.message === "INVALID_KEY") {
       showChatMessage(
         "assistant",
@@ -238,7 +254,7 @@ async function sendChatMessage() {
     } else {
       showChatMessage(
         "assistant",
-        "Unable to reach the AI service right now. Feel free to ask about Prerana's skills, projects, or background!"
+        "Unable to connect to AI right now. Feel free to ask about Prerana's skills, projects, or background!"
       );
     }
   } finally {
